@@ -1,0 +1,28 @@
+.discard {
+  width: 20em;
+  height: 28.625em;
+
+  font-size: 6px;
+
+  position: absolute;
+}
+.discard.shuffle {
+  animation: shuffle 500ms ease-in-out 1 forwards;
+  z-index: 10;
+}
+@keyframes shuffle {
+  0% {
+    transform: initial;
+    opacity: 1;
+  }
+  49% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(23em) rotateY(-180deg) skewX(-6deg);
+    opacity: 0;
+  }
+}

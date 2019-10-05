@@ -13,6 +13,11 @@
   font-size: 6px;
   box-shadow: 0.3em 0.3em 3px black;
 }
+.card.preview {
+  font-size: 16px;
+  transform: initial;
+  z-index: 100;
+}
 .card .title {
   position: absolute;
   top: 1.1em;
@@ -20,7 +25,7 @@
   padding: 0.4em;
   padding-left: 0.8em;
   background-color: white;
-  font-family: 'Contrail One', cursive;
+  font-family: "Contrail One", cursive;
   font-size: 1.1em;
 }
 .card img {
@@ -28,6 +33,8 @@
   height: 100%;
 }
 .card.flip {
+  --animationXOffset: 0em;
+  --animationYOffset: 0em;
   animation: cardFlip 500ms ease-in-out 1 forwards;
 }
 @keyframes cardFlip {
@@ -35,17 +42,55 @@
     z-index: 0;
   }
   100% {
-    transform: translateX(-22em) rotateY(0deg);
+    transform: translate(calc(-22em + var(--animationXOffset)), var(--animationYOffset)) rotateY(0deg);
     z-index: 10;
   }
 }
+.card.waitingForFeedback {
+  animation: glow 3s ease-in-out infinite;
+}
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: -0.4em -0.4em 3px cornflowerblue, 0.4em -0.4em 3px cornflowerblue, -0.4em 0.4em 3px cornflowerblue,
+      0.4em 0.4em 3px cornflowerblue;
+  }
+  50% {
+    box-shadow: -0.4em -0.4em 5px cornflowerblue, 0.4em -0.4em 5px cornflowerblue, -0.4em 0.4em 5px cornflowerblue,
+      0.4em 0.4em 5px cornflowerblue;
+  }
+}
+.card.waitingForFeedback .requirementDescription {
+  color: blue;
+}
+.card.waitingForFeedback .requirementDescription:after {
+  content: "✔️";
+}
+.card.destroying {
+  animation: burnUp 400ms linear forwards;
+  -webkit-mask-image: linear-gradient(black 90%, transparent 100%);
+  mask-image: linear-gradient(black 90%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+@keyframes burnUp {
+  0% {
+    -webkit-mask-position-y: 0;
+    mask-position-y: 0;
+  }
+  100% {
+    -webkit-mask-position-y: -28em;
+    mask-position-y: -28em;
+  }
+}
+
 .card .text {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 
   position: absolute;
   bottom: 0.75em;
-  left:  0.75em;
-  right:  0.75em;
+  left: 0.75em;
+  right: 0.75em;
   background-color: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(5px);
 

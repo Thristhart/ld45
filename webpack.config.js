@@ -1,52 +1,53 @@
-const path = require('path');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-
+const path = require("path");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  entry: path.resolve(__dirname, 'src'),
+  entry: path.resolve(__dirname, "src"),
+
+  devtool: "source-map",
 
   output: {
-    filename: 'bundle.[hash].js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: "bundle.[hash].js",
+    path: path.resolve(__dirname, "dist"),
   },
 
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.json']
+    extensions: [".ts", ".tsx", ".js", ".json"],
   },
 
   module: {
     rules: [
       {
         test: /\.(ts|js)x?$/,
-        loader: 'ts-loader',
-        exclude: /node_modules/
+        loader: "ts-loader",
+        exclude: /node_modules/,
       },
       {
         test: /\.css$/,
-        use: [ 'style-loader', 'css-loader' ]
+        use: ["style-loader", "css-loader"],
       },
       {
         test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
-        loader: 'file-loader',
-      }
+        loader: "file-loader",
+      },
     ],
   },
 
   devServer: {
-    contentBase: path.resolve(__dirname, 'dist')
+    contentBase: path.resolve(__dirname, "dist"),
   },
 
   plugins: [
     new ForkTsCheckerWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: "./src/index.html"
+      template: "./src/index.html",
     }),
-    new CopyWebpackPlugin(["./assets/**/*",]),
+    new CopyWebpackPlugin(["./assets/**/*"]),
   ],
-  
+
   node: {
-    fs: 'empty'
-  }
+    fs: "empty",
+  },
 };

@@ -6,13 +6,16 @@ export class Deck {
   static displayName: string;
   static artUrl: string;
 
-
-  constructor(public position: {x: number, y: number}) {
-    this.cards = shuffle((this.constructor as typeof Deck).initialCards, {copy: true}).map(CardClass => new CardClass(this.position));
+  constructor(public position: { x: number; y: number }) {
+    this.cards = shuffle((this.constructor as typeof Deck).initialCards, { copy: true }).map(
+      (CardClass) => new CardClass(this.position)
+    );
+    this.discard = [];
   }
 
   locked: boolean;
   cards: Card[];
+  discard: Card[];
 }
 
 export function getClassFromDeck(foo: Deck) {

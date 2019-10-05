@@ -1,1 +1,15 @@
-@import url('https://fonts.googleapis.com/css?family=Contrail+One|Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Contrail+One|Roboto&display=swap");
+
+html {
+  font-size: 1px;
+  background-color: lightgreen;
+  overflow: hidden;
+}
+body {
+  /*transform: translate(50vw, 50vh);*/
+}
+
+#container {
+  width: 100vw;
+  height: 100vh;
+}
