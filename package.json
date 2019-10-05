@@ -1,0 +1,49 @@
+{
+  "name": "ld45",
+  "version": "1.0.0",
+  "description": "ludum dare jam #44",
+  "main": "src/index.ts",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.6",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-decorators": "^7.1.6",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/preset-typescript": "^7.1.0",
+    "@types/debounce": "^1.2.0",
+    "@types/react": "^16.9.5",
+    "@types/react-dom": "^16.9.1",
+    "@types/shuffle-array": "0.0.28",
+    "babel-loader": "^8.0.4",
+    "browser-sync": "^2.26.3",
+    "copy-webpack-plugin": "^4.6.0",
+    "css-loader": "^1.0.1",
+    "file-loader": "^2.0.0",
+    "fork-ts-checker-webpack-plugin": "^0.5.0",
+    "html-webpack-plugin": "^4.0.0-beta.4",
+    "style-loader": "^0.23.1",
+    "ts-loader": "^5.3.1",
+    "typescript": "^3.1.6",
+    "webpack": "^4.26.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10",
+    "webpack-merge": "^4.1.4"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "webpack --mode production",
+    "build": "npm run build:types && npm run build:js",
+    "dev": "webpack-dev-server --mode development"
+  },
+  "dependencies": {
+    "debounce": "^1.2.0",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "shuffle-array": "^1.0.1"
+  }
+}
