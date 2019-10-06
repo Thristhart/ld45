@@ -1,0 +1,89 @@
+.recipe {
+  background-color: #ff9638;
+
+  font-size: 16rem;
+
+  border-radius: 10rem;
+  padding: 8rem;
+
+  display: flex;
+  flex-direction: column;
+  margin: 6rem;
+}
+.recipe .recipeName {
+  font-size: 18rem;
+  font-family: "Contrail One", cursive;
+  color: white;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 4rem;
+}
+.recipe .content {
+  display: grid;
+  grid-template-rows: 1fr 0.1fr 1fr;
+  grid-template-columns: 1fr 0.5fr 1fr;
+  justify-items: center;
+
+  background-color: #cf782a;
+  border-radius: 10rem;
+  padding: 4rem;
+}
+
+.recipe .dropzone {
+  width: 129rem;
+  height: 171.75rem;
+  border: 1px dashed white;
+  border-radius: 0.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem;
+  box-sizing: border-box;
+
+  grid-row: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.recipe .dropzone img {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  filter: grayscale() blur(2px);
+}
+.recipe .dropzone .title {
+  font-size: 18rem;
+  font-family: "Contrail One", cursive;
+  color: white;
+  text-align: center;
+  z-index: 1;
+  background-color: #cf782a;
+  width: 100%;
+}
+.recipe .plus {
+  font-size: 48rem;
+  font-family: "Contrail One", cursive;
+  color: white;
+  text-align: center;
+  grid-row: 1;
+  align-self: center;
+}
+
+.recipe .equals {
+  font-size: 48rem;
+  font-family: "Contrail One", cursive;
+  color: white;
+  text-align: center;
+  grid-row: 2;
+  grid-column: 2;
+  align-self: flex-start;
+  line-height: 30rem;
+}
+
+.recipe .dropzone.result {
+  grid-row: 3;
+  grid-column: 1/4;
+  justify-self: center;
+}

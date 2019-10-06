@@ -15,13 +15,29 @@ Q1:
 Q2:
 
 - Requirement: Craft something.
-- Reward: Rock.
+- Reward: Unlock Streambed Card Type for Forest Deck
+
+Q3:
+
+- Requirement: Craft Fire
+- Reward: Torch Recipe
+
+Q4:
+
+- Requirement: Reach 8 Cards in a Single Deck.
+- Reward: Unlock Cave Card Type for Forest Deck.
 
 # Forest deck
 
 - Tree card -> Gives Wood to Resource Pool
+- Rock card -> Gives Rock to Resource Pool
 
 # Crafts
 
 - Wood + Wood = Bridge -> Adds cards to Forest.
-- Fire?
+- Wood + Rock = Fire -> Crafting Component.
+- Fire + Wood = Torch -> Consumed for Cave exploration.
+
+# Shorthands
+
+- Adding a new Card Type to a deck also adds a single Card of that Type.

@@ -4,12 +4,28 @@ html {
   font-size: 1px;
   background-color: lightgreen;
   overflow: hidden;
+  --cameraX: 0rem;
+  --cameraY: 0rem;
+  user-select: none;
 }
-body {
-  /*transform: translate(50vw, 50vh);*/
+#field {
+  transform: translate(calc(50vw + var(--cameraX) - 64.5rem - 180rem), calc(50vh + var(--cameraY) - 85.875rem));
 }
 
 #container {
   width: 100vw;
   height: 100vh;
+}
+
+#recipes {
+  display: flex;
+  overflow: auto;
+  background: rgba(64, 64, 64, 0.3);
+  border-left: 2px solid rgba(64, 64, 64, 0.6);
+  backdrop-filter: blur(10px);
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  flex-direction: column;
 }

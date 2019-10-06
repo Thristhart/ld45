@@ -6,7 +6,9 @@ import "./deck.css";
 import { cards } from "../state";
 import { Card } from "../models/card";
 import { Discard } from "./discard";
-import { Quests } from "../decks/quests";
+import { Quest } from "../decks/quests";
+import { AudioControl } from "../audio";
+import shuffle from "shuffle-array";
 
 interface DeckProps {
   deck: Deck;
@@ -71,7 +73,7 @@ export const DeckComponent = (props: DeckProps) => {
         {topCard}
         {
           <CardComponent
-            card={deck.cards[0]}
+            card={deck.cards[deck.cards.length - 1]}
             flip={true}
             transformOverride={`translate(${deck.cards.length * 0.1}em, ${-deck.cards.length * 0.1}em) rotateY(180deg)`}
             transformOffset={{ x: `${deck.discard.length * 0.1}em`, y: `${-deck.discard.length * 0.1}em` }}
@@ -93,12 +95,13 @@ export const DeckComponent = (props: DeckProps) => {
         });
       } else {
         // can't shuffle decks
-        if (deck instanceof Quests) {
+        if (deck instanceof Quest) {
           return;
         }
+        AudioControl.shuffle.play();
         setShuffling(true);
         setTimeout(() => {
-          deck.cards = deck.discard;
+          deck.cards = shuffle(deck.discard);
           deck.discard = [];
           setShuffling(false);
         }, 500);
@@ -107,11 +110,13 @@ export const DeckComponent = (props: DeckProps) => {
   };
 
   const drawAnimation = () => {
+    AudioControl.draw.play();
     setFlipping(true);
     return new Promise<Card>((resolve) =>
       setTimeout(() => {
         const card = deck.cards.pop();
         card.position = { x: deck.position.x - 132, y: deck.position.y };
+        AudioControl.hit_table.play();
         setFlipping(false);
         resolve(card);
       }, 500)

@@ -1,5 +1,5 @@
 import { Card, getClassFromCard } from "../models/card";
-import React, { useState, useRef, Component, CSSProperties } from "react";
+import React, { useState, useRef, Component, CSSProperties, useCallback } from "react";
 import "./card.css";
 import { debounce } from "debounce";
 import { Deck } from "../models/deck";
@@ -54,20 +54,8 @@ export const renderCardPreviewAtLocation = (
   if (card.waitingForFeedback) {
     className += " waitingForFeedback";
   }
-  const onMouseEnterF = () => {
-    console.log("preview enter");
-    onMouseEnter();
-  };
-  const onMouseEndF = () => {
-    console.log("preview exit");
-    onMouseLeave();
-  };
   return (
-    <div
-      className={className}
-      style={{ left: `${x}rem`, top: `${y}rem` }}
-      onMouseEnter={onMouseEnterF}
-      onMouseLeave={onMouseEndF}>
+    <div className={className} style={{ left: `${x}rem`, top: `${y}rem` }}>
       {renderCardContents(card)}
     </div>
   );
@@ -82,7 +70,7 @@ export const CardComponent = (props: CardProps) => {
   const onMouseEnter = () => {
     if (cardContainerRef.current && !card.destroying && !flip) {
       const rect = cardContainerRef.current.getBoundingClientRect();
-      targetHoverPosition.current = { x: rect.right + 4, y: rect.top + rect.height / 2 - cardHeight / 2 };
+      targetHoverPosition.current = { x: rect.right + 8, y: rect.top + rect.height / 2 - cardHeight / 2 };
       if (targetHoverPosition.current.y < 0) {
         targetHoverPosition.current.y = 0;
       }
@@ -90,13 +78,12 @@ export const CardComponent = (props: CardProps) => {
         targetHoverPosition.current.x = 0;
       }
       if (targetHoverPosition.current.x + cardWidth > window.innerWidth) {
-        targetHoverPosition.current.x = window.innerWidth - cardWidth - 12;
+        targetHoverPosition.current.x = rect.left - cardWidth - 12;
       }
       if (targetHoverPosition.current.y + cardHeight > window.innerHeight) {
         targetHoverPosition.current.y = window.innerHeight - cardHeight - 12;
       }
     }
-    console.log("mouseEnter on card for preview");
     setCardPreview(
       renderCardPreviewAtLocation(
         card,
@@ -104,17 +91,23 @@ export const CardComponent = (props: CardProps) => {
         targetHoverPosition.current.y,
         onMouseEnter,
         onMouseLeave
-      )
+      ),
+      card.id
     );
     onMouseLeave.clear();
   };
-  const onMouseLeave = debounce(() => {
-    setCardPreview(null);
-  }, 200);
+  const onMouseLeave = useCallback(
+    debounce(() => {
+      setCardPreview(null, card.id);
+    }, 200),
+    []
+  );
   const onMouseDown = (e) => {
     e.preventDefault();
-    setCardPreview(null);
-    if (!disableDrag) miscState.draggedCard = card;
+    if (!disableDrag && !card.waitingForFeedback) {
+      miscState.draggedCard = card;
+      setCardPreview(null, card.id);
+    }
   };
   const onClick = () => {
     if (card.waitingForFeedback && !card.destroying) {
@@ -146,7 +139,7 @@ export const CardComponent = (props: CardProps) => {
   if (card.destroying) {
     className += " destroying";
     if (!destroyingTimer.current) {
-      setCardPreview(null);
+      setCardPreview(null, card.id);
       destroyingTimer.current = setTimeout(() => {
         if (deck) {
           deck.discard.splice(deck.discard.indexOf(card));

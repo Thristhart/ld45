@@ -9,11 +9,16 @@ export class Card {
   static recipe?: Card[];
   static destroysOnPlay: boolean;
 
-  constructor(public position: { x: number; y: number }) {}
+  static _nextId = 0;
+
+  constructor(public position: { x: number; y: number }) {
+    this.id = "card" + Card._nextId++;
+  }
 
   waitingForFeedback?: boolean;
   destroying?: boolean;
   div?: HTMLDivElement;
+  id: string;
 
   play() {
     const cardType = getClassFromCard(this);
