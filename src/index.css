@@ -2,14 +2,47 @@
 
 html {
   font-size: 1px;
-  background-color: lightgreen;
+  background-color: #a18c7d;
   overflow: hidden;
   --cameraX: 0rem;
   --cameraY: 0rem;
   user-select: none;
 }
+body {
+  background-image: url("../assets/wood_bg_reasonable.jpg");
+  background-size: 768px;
+  background-position-x: var(--cameraX);
+  background-position-y: var(--cameraY);
+  margin: 0;
+  padding: 0;
+}
 #field {
-  transform: translate(calc(50vw + var(--cameraX) - 64.5rem - 180rem), calc(50vh + var(--cameraY) - 85.875rem));
+  transform: translate(calc(50vw + var(--cameraX) - 64.5rem), calc(50vh + var(--cameraY) - 85.875rem));
+}
+
+#cavepath {
+  pointer-events: none;
+  background: transparent;
+  background-image: url("../assets/cave_path.png");
+  width: 816em;
+  height: 244em;
+  background-size: 100%;
+  position: absolute;
+  top: -290rem;
+  left: -190rem;
+  z-index: -1;
+
+  -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
+  mask-image: linear-gradient(to right, black 90%, transparent 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+
+  -webkit-mask-position-x: -816em;
+  mask-position-x: -816em;
+}
+#cavepath.revealed {
+  -webkit-mask-image: initial;
+  mask-image: initial;
 }
 
 #container {
@@ -28,4 +61,9 @@ html {
   top: 0;
   height: 100vh;
   flex-direction: column;
+  transform: translateX(400rem);
+}
+#recipes.show {
+  transform: translateX(0rem);
+  transition: transform 700ms ease-in;
 }

@@ -1,0 +1,20 @@
+.stack {
+  position: absolute;
+  z-index: 0;
+  width: 129rem;
+  height: 171.75rem;
+}
+.stack .count {
+  position: absolute;
+  bottom: 16rem;
+  right: 12rem;
+  width: 30rem;
+  height: 30rem;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.7);
+  font-family: "Contrail One", cursive;
+  font-size: 20rem;
+  border-radius: 50%;
+}

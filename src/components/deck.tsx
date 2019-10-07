@@ -9,6 +9,8 @@ import { Discard } from "./discard";
 import { Quest } from "../decks/quests";
 import { AudioControl } from "../audio";
 import shuffle from "shuffle-array";
+import { forceUpdate } from "..";
+import { Guardian } from "../cards/forest/guardian";
 
 interface DeckProps {
   deck: Deck;
@@ -41,6 +43,7 @@ const renderDeckCard = (deck: Deck, index: number, flipped?: boolean, reverseFli
 
 export const DeckComponent = (props: DeckProps) => {
   const { deck } = props;
+  const deckType = getClassFromDeck(deck);
 
   const [isFlipping, setFlipping] = useState(false);
   const [isShuffling, setShuffling] = useState(false);
@@ -88,27 +91,37 @@ export const DeckComponent = (props: DeckProps) => {
   };
 
   const draw = () => {
+    if (deckType === Quest && deck.discard.length > 0) {
+      return false;
+    }
     if (!isFlipping && !isShuffling) {
       if (deck.cards.length > 0) {
         drawAnimation().then((card) => {
+          if (deck.discard[deck.discard.length - 1] instanceof Guardian) {
+            AudioControl.grove_guardian.baseAudio.pause();
+          }
           drawEffect(card);
         });
+        return true;
       } else {
         // can't shuffle decks
         if (deck instanceof Quest) {
-          return;
+          return false;
         }
         AudioControl.shuffle.play();
         setShuffling(true);
         setTimeout(() => {
           deck.cards = shuffle(deck.discard);
+          deck.cards.forEach((card) => (card.wasPlayed = false));
           deck.discard = [];
           setShuffling(false);
         }, 500);
+        return false;
       }
     }
+    return false;
   };
-
+  deck.draw = draw;
   const drawAnimation = () => {
     AudioControl.draw.play();
     setFlipping(true);
@@ -128,6 +141,11 @@ export const DeckComponent = (props: DeckProps) => {
     card.performEffect();
   };
 
+  let deckSize = deck.cards.length;
+  if (isFlipping) {
+    deckSize--;
+  }
+
   return (
     <>
       <Discard deck={deck} shuffle={isShuffling} />
@@ -135,6 +153,7 @@ export const DeckComponent = (props: DeckProps) => {
         {isShuffling && renderDeckCard(deck, 0, true, true)}
         {bottomDeckCards}
         {topCard}
+        {deckSize > 1 && <span className="count">{deckSize}</span>}
       </div>
     </>
   );

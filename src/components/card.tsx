@@ -5,6 +5,8 @@ import { debounce } from "debounce";
 import { Deck } from "../models/deck";
 import { forceUpdate, setCardPreview } from "..";
 import { miscState } from "../state";
+import { AudioControl } from "../audio";
+import { Golem } from "../cards/upgrades/golem";
 
 interface CardProps {
   card: Card;
@@ -33,7 +35,7 @@ const renderCardContents = (card: Card) => {
             <b>Requirement</b>: <span className="requirementDescription">{cardType.requirements.description}</span>
           </p>
         )}
-        {cardType.effect && (
+        {cardType.effect && cardType.effect.description !== "" && (
           <p className="effect">
             <b>Effect</b>: {cardType.effect.description}
           </p>
@@ -43,16 +45,13 @@ const renderCardContents = (card: Card) => {
   );
 };
 
-export const renderCardPreviewAtLocation = (
-  card: Card,
-  x: number,
-  y: number,
-  onMouseEnter: () => void,
-  onMouseLeave: () => void
-) => {
+export const renderCardPreviewAtLocation = (card: Card, x: number, y: number) => {
   let className = "card preview";
   if (card.waitingForFeedback) {
     className += " waitingForFeedback";
+  }
+  if (card.wasPlayed) {
+    className += " wasPlayed";
   }
   return (
     <div className={className} style={{ left: `${x}rem`, top: `${y}rem` }}>
@@ -68,7 +67,12 @@ export const CardComponent = (props: CardProps) => {
   const cardContainerRef = useRef<HTMLDivElement>(null);
 
   const onMouseEnter = () => {
-    if (cardContainerRef.current && !card.destroying && !flip) {
+    if (
+      cardContainerRef.current &&
+      !card.destroying &&
+      !flip &&
+      !(miscState.draggedCard && cardContainerRef.current === miscState.draggedCard.div)
+    ) {
       const rect = cardContainerRef.current.getBoundingClientRect();
       targetHoverPosition.current = { x: rect.right + 8, y: rect.top + rect.height / 2 - cardHeight / 2 };
       if (targetHoverPosition.current.y < 0) {
@@ -83,17 +87,11 @@ export const CardComponent = (props: CardProps) => {
       if (targetHoverPosition.current.y + cardHeight > window.innerHeight) {
         targetHoverPosition.current.y = window.innerHeight - cardHeight - 12;
       }
+      setCardPreview(
+        renderCardPreviewAtLocation(card, targetHoverPosition.current.x, targetHoverPosition.current.y),
+        card.id
+      );
     }
-    setCardPreview(
-      renderCardPreviewAtLocation(
-        card,
-        targetHoverPosition.current.x,
-        targetHoverPosition.current.y,
-        onMouseEnter,
-        onMouseLeave
-      ),
-      card.id
-    );
     onMouseLeave.clear();
   };
   const onMouseLeave = useCallback(
@@ -104,8 +102,14 @@ export const CardComponent = (props: CardProps) => {
   );
   const onMouseDown = (e) => {
     e.preventDefault();
-    if (!disableDrag && !card.waitingForFeedback) {
+    if (!disableDrag && !card.waitingForFeedback && !document.getElementById("ui").contains(cardContainerRef.current)) {
       miscState.draggedCard = card;
+      card.div.classList.add("dragging");
+      miscState.dragStartPos = { ...card.position };
+      AudioControl.draw.play();
+      if (card instanceof Golem) {
+        clearInterval(card.interval);
+      }
       setCardPreview(null, card.id);
     }
   };
@@ -135,6 +139,9 @@ export const CardComponent = (props: CardProps) => {
   if (card.waitingForFeedback) {
     className += " waitingForFeedback";
   }
+  if (card.wasPlayed) {
+    className += " wasPlayed";
+  }
   const destroyingTimer = useRef<NodeJS.Timeout>();
   if (card.destroying) {
     className += " destroying";
@@ -163,7 +170,6 @@ export const CardComponent = (props: CardProps) => {
     containerStyle.left = ""; // let discard handle our position
     containerStyle.top = "";
   }
-
   return (
     <>
       <div

@@ -9,9 +9,12 @@
 
   transform: skewX(3deg);
 }
+.card.dragging {
+  z-index: 30;
+}
 .card.small {
   font-size: 6px;
-  box-shadow: 0.3em 0.3em 3px black;
+  box-shadow: -0.3em 0.3em 3px black;
 }
 .card.preview {
   font-size: 16px;
@@ -60,10 +63,12 @@
       0.4em 0.4em 5px cornflowerblue;
   }
 }
-.card.waitingForFeedback .requirementDescription {
+.card.waitingForFeedback .requirementDescription,
+.card.wasPlayed .requirementDescription {
   color: blue;
 }
-.card.waitingForFeedback .requirementDescription:after {
+.card.waitingForFeedback .requirementDescription:after,
+.card.wasPlayed .requirementDescription:after {
   content: "✔️";
 }
 .card.destroying {

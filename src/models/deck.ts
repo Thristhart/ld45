@@ -6,6 +6,7 @@ export class Deck {
   static initialCards: (typeof Card)[];
   static initialCardAddQueue: (typeof Card)[];
   static initialCardsAllowed: Set<typeof Card>;
+  static defaultCardAdd: typeof Card;
   static displayName: string;
   static artUrl: string;
 
@@ -18,19 +19,26 @@ export class Deck {
   discard: Card[];
   id: string;
 
+  draw: () => void;
+
   constructor(public position: { x: number; y: number }) {
-    this.cards = shuffle((this.constructor as typeof Deck).initialCards, { copy: true }).map(
-      (CardClass) => new CardClass(this.position)
-    );
+    const type = this.constructor as typeof Deck;
+    this.cards = shuffle(type.initialCards, { copy: true }).map((CardClass) => new CardClass(this.position));
     this.discard = [];
     this.id = "deck" + Deck._nextId++;
-    this.cardAddQueue = Deck.initialCardAddQueue;
-    this.cardsAllowed = Deck.initialCardsAllowed;
+    this.cardAddQueue = type.initialCardAddQueue;
+    this.cardsAllowed = type.initialCardsAllowed;
   }
 
   addNextCard() {
-    let cardType = this.cardAddQueue.find((cardType) => this.cardsAllowed.has(cardType));
-    if (cardType !== undefined) this.addCard(cardType);
+    const filter = (cardType) => this.cardsAllowed.has(cardType);
+    let cardType = this.cardAddQueue.find(filter);
+    let cardIndex = this.cardAddQueue.findIndex(filter);
+    if (!cardType) {
+      cardType = Array.from(this.cardsAllowed).pop();
+    }
+    this.addCard(cardType);
+    this.cardAddQueue.splice(cardIndex, 1);
   }
 
   addCard(cardType: typeof Card) {
